@@ -1,5 +1,5 @@
 #include "Stack.h"
-
+ 
 ERROR_CODE StackPush(Stack_t *stk, StackElem_t value)
 {
     ASSERT_OK(stk);
@@ -25,7 +25,7 @@ ERROR_CODE StackPop(Stack_t *stk, StackElem_t *ptr)
     if ((stk -> size) == 0)
         return CODE_FOUR;
 
-    if ((stk -> size) < (stk -> capacity / RESIZE_COEFF))
+    if ((stk -> size) <= (QUARTER_CAPACITY(stk)) && (stk -> size) > STACK_MIN_CAPACITY)
         err = ResizeDown(stk);
 
     if (err)

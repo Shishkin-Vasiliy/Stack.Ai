@@ -10,12 +10,12 @@ ERROR_CODE ResizeUp(Stack_t *stk)
     if (err)
         return err;
 
-    if (stk -> capacity * RESIZE_COEFF > STACK_MAX_SIZE)
+    if (stk -> capacity * RESIZE_COEFF > STACK_MAX_CAPACITY)
         return CODE_FIVE;
     
     stk -> capacity *= RESIZE_COEFF;
     
-    for (int i = stk -> size; i < stk -> capacity; i++)
+    for (size_t i = stk -> size; i < stk -> capacity; i++)
     {
         (stk -> data)[i] = POIZON_DBL;
     }
@@ -33,7 +33,7 @@ ERROR_CODE ResizeDown(Stack_t *stk)
     ERROR_CODE err = StackVerify(stk);
     if (err)
         return err;
-
+ 
     stk -> capacity /= RESIZE_COEFF;
 
     ASSERT_OK(stk);

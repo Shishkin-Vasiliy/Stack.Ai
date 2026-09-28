@@ -1,6 +1,6 @@
 #include "Stack.h"
 
-ERROR_CODE StackInit(Stack_t *stk, int capacity
+ERROR_CODE StackInit(Stack_t *stk, size_t capacity
                 ON_DBG(, const char *stack_name, const char *file_name, const char *func_name, int line))
 {
     printf("Initiating Stack\n");
@@ -16,7 +16,7 @@ ERROR_CODE StackInit(Stack_t *stk, int capacity
     stk -> line = line; 
     #endif
 
-    for (int i = 0; i < capacity; i++)
+    for (size_t i = 0; i < capacity; i++)
     {
         (stk -> data)[i] = POIZON_DBL;
     }
@@ -24,13 +24,13 @@ ERROR_CODE StackInit(Stack_t *stk, int capacity
     return err;
 }
 
-ERROR_CODE StackDestroy(Stack_t *stk, int capacity)
+ERROR_CODE StackDestroy(Stack_t *stk, size_t capacity)
 {
     ASSERT_OK(stk);
 
     printf("Destroying Stack\n");
     StackDump(stk);
-    for (int i = 0; i < capacity; i++)
+    for (size_t i = 0; i < capacity; i++)
     {
         (stk -> data)[i] = POIZON_DBL;
     }

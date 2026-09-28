@@ -3,7 +3,7 @@
 int main(void)
 {
     Stack_t stk1 = {};
-    int capacity = 2;
+    size_t capacity = 2;
 
     ERROR_CODE err = STACK_INIT(stk1, capacity);
     ERROR_MSG(&stk1, err);
