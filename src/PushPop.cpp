@@ -1,9 +1,9 @@
 #include "Stack.h"
  
-ERROR_CODE StackPush(Stack_t *stk, StackElem_t value)
+StackErr_t StackPush(Stack_t *stk, StackElem_t value)
 {
-    ASSERT_OK(stk);
-    ERROR_CODE err = CODE_ZERO;
+    StackErr_t err = StackVerify(stk);
+    err = STACK_OK;
 
     if ((stk -> size) == (stk -> capacity))
         err = ResizeUp(stk);
@@ -11,19 +11,18 @@ ERROR_CODE StackPush(Stack_t *stk, StackElem_t value)
     if (err)
         return err;
 
-    stk -> data[stk -> size++] = value;
+    stk -> info[stk -> size++] = value;
 
-    ASSERT_OK(stk);
-    return CODE_ZERO;
+    err = StackVerify(stk);
+    return err;
 }
 
-ERROR_CODE StackPop(Stack_t *stk, StackElem_t *ptr)
+StackErr_t StackPop(Stack_t *stk, StackElem_t *ptr)
 {
-    ASSERT_OK(stk);
-    ERROR_CODE err = CODE_ZERO;
+    StackErr_t err = StackVerify(stk);
 
     if ((stk -> size) == 0)
-        return CODE_FOUR;
+        return STACK_UNDERFLOW;
 
     if ((stk -> size) <= (QUARTER_CAPACITY(stk)) && (stk -> size) > STACK_MIN_CAPACITY)
         err = ResizeDown(stk);
@@ -31,9 +30,9 @@ ERROR_CODE StackPop(Stack_t *stk, StackElem_t *ptr)
     if (err)
         return err;
     
-    *ptr = (stk -> data[--(stk -> size)]);
-    stk -> data[(stk -> size)] = NAN;
+    *ptr = (stk -> info[--(stk -> size)]);
+    stk -> data[(stk -> size)] = POIZON_DBL;
 
-    ASSERT_OK(stk);
-    return CODE_ZERO;
+    err = StackVerify(stk);
+    return err;
 }

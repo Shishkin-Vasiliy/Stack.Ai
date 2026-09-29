@@ -1,41 +1,53 @@
 #include "Stack.h"
 
-ERROR_CODE ResizeUp(Stack_t *stk)
+StackErr_t ResizeUp(Stack_t *stk)
 {
-    ASSERT_OK(stk);
+    StackErr_t err = StackVerify(stk);
 
-    stk -> data = (StackElem_t *)realloc(stk -> data, (stk -> capacity) * sizeof(StackElem_t) * RESIZE_COEFF);
+    StackElem_t *temp = (StackElem_t *)realloc(stk -> data, (stk -> capacity + 2) * sizeof(StackElem_t) * RESIZE_COEFF);
+    if (temp)
+    {
+        stk -> data = temp;
+        stk -> info = temp + 1;
+    }
 
-    ERROR_CODE err = StackVerify(stk);
+    err = StackVerify(stk);
     if (err)
         return err;
 
     if (stk -> capacity * RESIZE_COEFF > STACK_MAX_CAPACITY)
-        return CODE_FIVE;
+        return STACK_OVERFLOW;
     
     stk -> capacity *= RESIZE_COEFF;
     
     for (size_t i = stk -> size; i < stk -> capacity; i++)
     {
-        (stk -> data)[i] = POIZON_DBL;
+        (stk -> info)[i] = POIZON_DBL;
     }
+    *(stk -> info + stk -> capacity + 1) = CHICKEN02;
 
-    ASSERT_OK(stk);
-    return CODE_ZERO;
+    err = StackVerify(stk);
+    return err;
 }
 
-ERROR_CODE ResizeDown(Stack_t *stk)
+StackErr_t ResizeDown(Stack_t *stk)
 {
-    ASSERT_OK(stk);
+    StackErr_t err = StackVerify(stk);
 
-    stk -> data = (StackElem_t *)realloc(stk -> data, (stk -> capacity) * sizeof(StackElem_t) / RESIZE_COEFF);
+    StackElem_t *temp = (StackElem_t *)realloc(stk -> data, (stk -> capacity + 2) * sizeof(StackElem_t) / RESIZE_COEFF);
+    if (temp)
+    {
+        stk -> data = temp;
+        stk -> info = temp + 1;
+    }
 
-    ERROR_CODE err = StackVerify(stk);
+    err = StackVerify(stk);
     if (err)
         return err;
  
     stk -> capacity /= RESIZE_COEFF;
+    *(stk -> info + stk -> capacity + 1) = CHICKEN02;
 
-    ASSERT_OK(stk);
-    return CODE_ZERO;
+    err = StackVerify(stk);
+    return err;
 }

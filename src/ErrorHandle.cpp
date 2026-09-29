@@ -1,38 +1,40 @@
 #include "Stack.h"
 
-ERROR_CODE StackIsEmpty(Stack_t *stk)
+StackErr_t StackIsEmpty(Stack_t *stk)
 {
-    assert(stk);
+    if (!stk)   
+        return STACK_BAD_PTR;
     
     size_t size = stk -> size;
     size_t capacity = stk -> capacity;
     
     if (size != 0 && capacity != 0)
-        return CODE_TWO;
+        return EMPTY_STACK_BAD_SIZE;
     else
-        return CODE_ZERO;
+        return STACK_OK;
 }
 
-ERROR_CODE StackVerify(Stack_t *stk)
+StackErr_t StackVerify(Stack_t *stk)
 {
     if ((!stk) || !(stk -> data))
-        return CODE_ONE;
+        return STACK_BAD_PTR;
 
     size_t size = stk -> size;
     size_t capacity = stk -> capacity;
 
     if (size > capacity)
-        return CODE_THREE;
+        return STACK_BAD_SIZE;
 
-    return CODE_ZERO;
+    return STACK_OK;
 }
 
 void StackDump(Stack_t *stk)
 {
     #ifdef STACK_DEBUG
-    
+
     const char *name = stk -> stack_name;
-    StackElem_t *data = stk -> data;
+    //StackElem_t *data = stk -> data;
+    StackElem_t *info = stk -> info;
     const char *func = stk -> func_name;
     const char *file = stk -> file_name;
     int line = stk -> line;
@@ -45,14 +47,14 @@ void StackDump(Stack_t *stk)
     printf("{\n");
     printf("capacity = %lu\n", capacity);
     printf("size     = %lu\n", size);
-    printf("data[%p]\n", data);
-    if (data)
+    printf("info[%p]\n", info);
+    if (info)
     {
         printf("    {\n");
         for (size_t i = 0; i < size; i++)
-            printf("    *[%lu] = %lg\n", i, data[i]);
+            printf("    *[%lu] = %lg\n", i, info[i]);
         for (size_t j = size; j < capacity; j++)
-            printf("     [%lu] = %lg (POIZON)\n", j, data[j]);
+            printf("     [%lu] = %lg (POIZON)\n", j, info[j]);
         printf("    }\n");
     }
     printf("}\n");
@@ -61,30 +63,30 @@ void StackDump(Stack_t *stk)
     #endif
 }
 
-void PrintShrtErrMsg(ERROR_CODE err)
+void PrintShrtErrMsg(StackErr_t err)
 {
     switch(err)
     {
-        case CODE_ZERO:
+        case STACK_OK:
             break;
 
-        case CODE_ONE:
+        case STACK_BAD_PTR:
             printf("Error: failed to allocate memory for stack\n");
             break;
         
-        case CODE_TWO:
+        case EMPTY_STACK_BAD_SIZE:
             printf("Error: (invalid Stack) empty Stack has capacity and size unequal to 0\n");
             break;
 
-        case CODE_THREE:
+        case STACK_BAD_SIZE:
             printf("Error: size > capacity\n");
             break;
 
-        case CODE_FOUR:
+        case STACK_UNDERFLOW:
             printf("Stack UnderFlow: cannot do pop() from an empty Stack\n");
             break;
 
-        case CODE_FIVE:
+        case STACK_OVERFLOW:
             printf("Stack OverFlow: cannot push() to an overflowing Stack\n");
             break;
 
