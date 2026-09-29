@@ -46,12 +46,15 @@ void StackDump(Stack_t *stk)
     printf("capacity = %lu\n", capacity);
     printf("size     = %lu\n", size);
     printf("data[%p]\n", data);
-    printf("    {\n");
-    for (size_t i = 0; i < size; i++)
-        printf("    *[%lu] = %lg\n", i, data[i]);
-    for (size_t j = size; j < capacity; j++)
-        printf("     [%lu] = %lg (POIZON)\n", j, data[j]);
-    printf("    }\n");
+    if (data)
+    {
+        printf("    {\n");
+        for (size_t i = 0; i < size; i++)
+            printf("    *[%lu] = %lg\n", i, data[i]);
+        for (size_t j = size; j < capacity; j++)
+            printf("     [%lu] = %lg (POIZON)\n", j, data[j]);
+        printf("    }\n");
+    }
     printf("}\n");
     printf("****************************************\n\n");
 
