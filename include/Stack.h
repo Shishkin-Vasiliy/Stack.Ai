@@ -15,10 +15,10 @@ typedef double StackElem_t;
 #define ON_DBG(...) 
 #endif
 
-#define CHICKEN01 NAN
-#define CHICKEN02 NAN
-#define CHICKEN11 11111111
-#define CHICKEN22 22222222
+#define CHICKEN_LOWER 1e13
+#define CHICKEN_UPPER 1e10
+#define CHICKEN_LEFT 0xDEADDEAD
+#define CHICKEN_RIGHT 0xFACEFEED
 #define STACK_MIN_CAPACITY 16
 #define STACK_MAX_CAPACITY 1000
 #define QUARTER_CAPACITY(stk) ((stk) -> capacity / 4)
@@ -28,25 +28,29 @@ typedef double StackElem_t;
 
 struct Stack_t
 {
-    unsigned long long chicken11;
+    unsigned long long chicken_left;
+    StackElem_t *buf;
     StackElem_t *data;
-    StackElem_t *info;
     size_t size;
     size_t capacity;
     ON_DBG (const char *stack_name;
         const char *file_name;
         const char *func_name;
         int line;)
-    unsigned long long chicken22;
+    unsigned long long chicken_right;
 };
         
 enum StackErr_t {   
-    STACK_OK,                   // ошибок нет
-    STACK_BAD_PTR,              // стек не создан (calloc вернул NULL)
-    EMPTY_STACK_BAD_SIZE,       // размеры size и capacity не 0 у пустого стека
-    STACK_BAD_SIZE,             // size > capacity
-    STACK_UNDERFLOW,            // стек пуст, невозможно выполнить pop()
-    STACK_OVERFLOW              // стек переполнен, невозможно выполнить push()
+    STACK_OK,                           // ошибок нет
+    STACK_BAD_PTR,                      // стек не создан (calloc вернул NULL)
+    EMPTY_STACK_BAD_SIZE,               // размеры size и capacity не 0 у пустого стека
+    STACK_BAD_SIZE,                     // size > capacity
+    STACK_STRUCT_LEFT_CHICKEN_ATTACKED, // атакована курица слева от структуры стека
+    STACK_STRUCT_RIGHT_CHICKEN_ATTACKED,// атакована курица справа от структуры стека
+    STACK_DATA_LOWER_CHICKEN_ATTACKED,  // атакована курица внизу стека
+    STACK_DATA_UPPER_CHICKEN_ATTACKED,  // атакована курица наверху стека
+    STACK_UNDERFLOW,                    // стек пуст, невозможно выполнить pop()
+    STACK_OVERFLOW                      // стек переполнен, невозможно выполнить push()
 };
 
 // TODO возвращать все ошибки одним числом, коды ошибок это степени двойки
@@ -55,6 +59,7 @@ enum StackErr_t {
 
 StackErr_t StackInit(Stack_t *stk, size_t capacity
                 ON_DBG(, const char *stack_name, const char *file_name, const char *func_name, int line));
+StackErr_t StackChickenCheck(Stack_t *stk);
 StackErr_t StackIsEmpty(Stack_t *stk);                
 StackErr_t StackVerify(Stack_t *stk);
 void StackDump(Stack_t *stk);
@@ -64,12 +69,16 @@ StackErr_t StackPop(Stack_t *stk, StackElem_t *ptr);
 StackErr_t StackDestroy(Stack_t *stk);
 StackErr_t ResizeUp(Stack_t *stk);
 StackErr_t ResizeDown(Stack_t *stk);
+StackErr_t StackStructChickenCheck(Stack_t *stk);
+StackErr_t StackDataChickenCheck(Stack_t *stk);
+int DblCmp(StackElem_t a, StackElem_t b);
+//void PrintStack(Stack_t *stk);
 
 
 #define STACK_INIT(stk, capacity) (StackInit(&(stk), (capacity) \
                                     ON_DBG(, #stk,              \
                                             __FILE__,           \
-                                            __func__,       \
+                                            __func__,           \
                                             __LINE__))) 
 
 
@@ -92,8 +101,5 @@ do                              \
         PrintShrtErrMsg(err);   \
 } while (0)
 #endif
-
-
-//#define ASSERT_OK(stk) (assert(!StackVerify((stk))))
 
 #endif

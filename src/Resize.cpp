@@ -4,11 +4,11 @@ StackErr_t ResizeUp(Stack_t *stk)
 {
     StackErr_t err = StackVerify(stk);
 
-    StackElem_t *temp = (StackElem_t *)realloc(stk -> data, (stk -> capacity + 2) * sizeof(StackElem_t) * RESIZE_COEFF);
+    StackElem_t *temp = (StackElem_t *)realloc(stk -> buf, (stk -> capacity + 2) * sizeof(StackElem_t) * RESIZE_COEFF);
     if (temp)
     {
-        stk -> data = temp;
-        stk -> info = temp + 1;
+        stk -> buf = temp;
+        stk -> data = temp + 1;
     }
 
     err = StackVerify(stk);
@@ -22,9 +22,9 @@ StackErr_t ResizeUp(Stack_t *stk)
     
     for (size_t i = stk -> size; i < stk -> capacity; i++)
     {
-        (stk -> info)[i] = POIZON_DBL;
+        (stk -> data)[i] = POIZON_DBL;
     }
-    *(stk -> info + stk -> capacity + 1) = CHICKEN02;
+    *(stk -> data + stk -> capacity) = CHICKEN_UPPER;
 
     err = StackVerify(stk);
     return err;
@@ -34,11 +34,11 @@ StackErr_t ResizeDown(Stack_t *stk)
 {
     StackErr_t err = StackVerify(stk);
 
-    StackElem_t *temp = (StackElem_t *)realloc(stk -> data, (stk -> capacity + 2) * sizeof(StackElem_t) / RESIZE_COEFF);
+    StackElem_t *temp = (StackElem_t *)realloc(stk -> buf, (stk -> capacity + 2) * sizeof(StackElem_t) / RESIZE_COEFF);
     if (temp)
     {
-        stk -> data = temp;
-        stk -> info = temp + 1;
+        stk -> buf = temp;
+        stk -> data = temp + 1;
     }
 
     err = StackVerify(stk);
@@ -46,7 +46,7 @@ StackErr_t ResizeDown(Stack_t *stk)
         return err;
  
     stk -> capacity /= RESIZE_COEFF;
-    *(stk -> info + stk -> capacity + 1) = CHICKEN02;
+    *(stk -> data + stk -> capacity + 1) = CHICKEN_UPPER;
 
     err = StackVerify(stk);
     return err;

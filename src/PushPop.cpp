@@ -11,7 +11,7 @@ StackErr_t StackPush(Stack_t *stk, StackElem_t value)
     if (err)
         return err;
 
-    stk -> info[stk -> size++] = value;
+    stk -> data[stk -> size++] = value;
 
     err = StackVerify(stk);
     return err;
@@ -30,7 +30,7 @@ StackErr_t StackPop(Stack_t *stk, StackElem_t *ptr)
     if (err)
         return err;
     
-    *ptr = (stk -> info[--(stk -> size)]);
+    *ptr = (stk -> data[--(stk -> size)]);
     stk -> data[(stk -> size)] = POIZON_DBL;
 
     err = StackVerify(stk);

@@ -6,16 +6,16 @@ StackErr_t StackInit(Stack_t *stk, size_t capacity
     printf("Initiating Stack\n");
 
     StackErr_t err = StackIsEmpty(stk);
-    stk -> data = (StackElem_t *) calloc(capacity + 2, sizeof(StackElem_t));
-    stk -> info = stk -> data + 1;
+    stk -> buf = (StackElem_t *) calloc(capacity + 2, sizeof(StackElem_t));
+    stk -> data = stk -> buf + 1;
 
-    *(stk -> data) = CHICKEN01;
-    *((stk -> data) + capacity) = CHICKEN02;
+    *(stk -> buf) = CHICKEN_LOWER;
+    *(stk -> buf + capacity + 1) = CHICKEN_UPPER;
 
     stk -> capacity = capacity;
     
-    stk -> chicken11 = CHICKEN11;
-    stk -> chicken22 = CHICKEN22;
+    stk -> chicken_left = CHICKEN_LEFT;
+    stk -> chicken_right = CHICKEN_RIGHT;
     
     err = StackVerify(stk);
 
@@ -26,7 +26,7 @@ StackErr_t StackInit(Stack_t *stk, size_t capacity
 
     for (size_t i = 0; i < (stk -> capacity); i++)
     {
-        (stk -> info)[i] = POIZON_DBL;
+        (stk -> data)[i] = POIZON_DBL;
     }
     StackDump(stk);
     return err;
@@ -44,12 +44,12 @@ StackErr_t StackDestroy(Stack_t *stk)
 
     for (size_t i = 0; i < stk -> capacity + 2; i++)
     {
-        (stk -> data)[i] = POIZON_DBL;
+        (stk -> buf)[i] = POIZON_DBL;
     }
 
-    free(stk -> data);
+    free(stk -> buf);
+    stk -> buf = POIZON_STK_PTR;
     stk -> data = POIZON_STK_PTR;
-    stk -> info = POIZON_STK_PTR;
 
     return STACK_OK;
 }

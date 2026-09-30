@@ -1,10 +1,48 @@
 #include "Stack.h"
 
+int DblCmp(StackElem_t a, StackElem_t b)
+{
+    const double EPSILON = 1e-14;
+
+    if (fabs(a - b) < EPSILON)
+        return 0;
+    else if (a > b)
+        return 1;
+    else
+        return -1;
+}
+
+StackErr_t StackStructChickenCheck(Stack_t *stk)
+{
+    if (stk -> chicken_left != CHICKEN_LEFT) 
+        return STACK_STRUCT_LEFT_CHICKEN_ATTACKED;
+    else if (stk -> chicken_right != CHICKEN_RIGHT)
+        return STACK_STRUCT_RIGHT_CHICKEN_ATTACKED;
+    else
+        return STACK_OK;
+}
+
+StackErr_t StackDataChickenCheck(Stack_t *stk)
+{
+    size_t capacity = stk -> capacity;
+
+    if (DblCmp(*(stk -> buf), CHICKEN_LOWER) != 0 || isnan(*(stk -> buf)))
+        return STACK_DATA_LOWER_CHICKEN_ATTACKED;
+    else if (DblCmp(*(stk -> buf + capacity + 1), CHICKEN_UPPER) != 0 || isnan(*(stk -> buf + capacity + 1)))
+        return STACK_DATA_UPPER_CHICKEN_ATTACKED;
+    else
+        return STACK_OK;
+}
+
 StackErr_t StackIsEmpty(Stack_t *stk)
 {
     if (!stk)   
         return STACK_BAD_PTR;
     
+    StackErr_t err = StackStructChickenCheck(stk);
+    if (err)
+        return err;
+
     size_t size = stk -> size;
     size_t capacity = stk -> capacity;
     
@@ -16,8 +54,16 @@ StackErr_t StackIsEmpty(Stack_t *stk)
 
 StackErr_t StackVerify(Stack_t *stk)
 {
-    if ((!stk) || !(stk -> data))
+    if ((!stk) || !(stk -> buf))
         return STACK_BAD_PTR;
+
+    StackErr_t err = StackStructChickenCheck(stk);
+    if (err)
+        return err;
+
+    err = StackDataChickenCheck(stk);
+    if (err)
+        return err;
 
     size_t size = stk -> size;
     size_t capacity = stk -> capacity;
@@ -33,28 +79,33 @@ void StackDump(Stack_t *stk)
     #ifdef STACK_DEBUG
 
     const char *name = stk -> stack_name;
-    //StackElem_t *data = stk -> data;
-    StackElem_t *info = stk -> info;
+    StackElem_t *buf = stk -> buf;
     const char *func = stk -> func_name;
     const char *file = stk -> file_name;
     int line = stk -> line;
     size_t capacity = stk -> capacity;
     size_t size = stk -> size;
+    unsigned long long chicken_left = stk -> chicken_left;
+    unsigned long long chicken_right = stk -> chicken_right;
 
     printf("STACK_DUMP\n");
     printf("****************************************\n");
     printf("Stack_t <%s> [%p], %s at %s: %d\n", name, stk, func, file, line);
     printf("{\n");
-    printf("capacity = %lu\n", capacity);
-    printf("size     = %lu\n", size);
-    printf("info[%p]\n", info);
-    if (info)
+    printf("chicken_left = %llu\n", chicken_left);
+    printf("chicken_left = %llu\n", chicken_right);
+    printf("capacity     = %lu\n", capacity);
+    printf("size         = %lu\n", size);
+    printf("buf[%p]\n", buf);
+    if (buf)
     {
         printf("    {\n");
-        for (size_t i = 0; i < size; i++)
-            printf("    *[%lu] = %lg\n", i, info[i]);
-        for (size_t j = size; j < capacity; j++)
-            printf("     [%lu] = %lg (POIZON)\n", j, info[j]);
+        printf("    [ChickenLower] = %lg\n", buf[0]);
+        for (size_t i = 1; i < size + 1; i++)
+            printf("    *[%lu] = %lg\n", i, buf[i]);
+        for (size_t j = size + 1; j < capacity; j++)
+            printf("     [%lu] = %lg (POIZON)\n", j, buf[j]);
+        printf("    [ChickenUpper] = %lg\n", buf[capacity + 1]);
         printf("    }\n");
     }
     printf("}\n");
@@ -80,6 +131,22 @@ void PrintShrtErrMsg(StackErr_t err)
 
         case STACK_BAD_SIZE:
             printf("Error: size > capacity\n");
+            break;
+
+        case STACK_STRUCT_LEFT_CHICKEN_ATTACKED:
+            printf("Danger: Stack Struct left chicken got attacked\n");
+            break;
+            
+        case STACK_STRUCT_RIGHT_CHICKEN_ATTACKED:
+            printf("Danger: Stack Struct left chicken got attacked\n");
+            break;
+
+        case STACK_DATA_LOWER_CHICKEN_ATTACKED:
+            printf("Danger: Stack Data lower chicken got attacked\n");
+            break;
+
+        case STACK_DATA_UPPER_CHICKEN_ATTACKED:
+            printf("Danger: Stack Data upper chicken got attacked\n");
             break;
 
         case STACK_UNDERFLOW:
