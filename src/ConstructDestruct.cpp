@@ -56,14 +56,3 @@ StackErr_t StackDTor(Stack_t *stk)
 
 
 
-
-
-//StackErr_t StackInitNew(Stack_t *stk, size_t capacity
-//                ON_DBG(, const char *stack_name, const char *file_name, const char *func_name, int line))
-//{
-//    StackErr_t err = StackIsEmpty(stk);
-//
-//    uint8_t *temp_ptr = (uint8_t *)calloc(capacity * sizeof(StackElem_t) + 2 * sizeof(Canary_t));
-//    if (temp_ptr)
-//        stk -> buf = temp_ptr;
-//}
