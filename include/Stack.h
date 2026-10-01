@@ -6,8 +6,10 @@
 #include <assert.h>
 #include <stdlib.h>
 #include <math.h>
+#include <cstdint>
 
 typedef double StackElem_t;
+typedef uint64_t Canary_t;
 
 #ifdef STACK_DEBUG
 #define ON_DBG(...) __VA_ARGS__
@@ -57,7 +59,7 @@ enum StackErr_t {
 // сделать функцию которая обращает i-й бит числа в единицу
 // чтобы вернуть накопленный код ошибки можно просто переводить полученное двоичное число в десятичное
 
-StackErr_t StackInit(Stack_t *stk, size_t capacity
+StackErr_t StackCTor(Stack_t *stk, size_t capacity
                 ON_DBG(, const char *stack_name, const char *file_name, const char *func_name, int line));
 StackErr_t StackChickenCheck(Stack_t *stk);
 StackErr_t StackIsEmpty(Stack_t *stk);                
@@ -66,16 +68,15 @@ void StackDump(Stack_t *stk);
 void PrintShrtErrMsg(StackErr_t err);
 StackErr_t StackPush(Stack_t *stk, StackElem_t value);
 StackErr_t StackPop(Stack_t *stk, StackElem_t *ptr);
-StackErr_t StackDestroy(Stack_t *stk);
+StackErr_t StackDTor(Stack_t *stk);
 StackErr_t ResizeUp(Stack_t *stk);
 StackErr_t ResizeDown(Stack_t *stk);
 StackErr_t StackStructChickenCheck(Stack_t *stk);
 StackErr_t StackDataChickenCheck(Stack_t *stk);
 int DblCmp(StackElem_t a, StackElem_t b);
-//void PrintStack(Stack_t *stk);
 
 
-#define STACK_INIT(stk, capacity) (StackInit(&(stk), (capacity) \
+#define STACK_CTOR(stk, capacity) (StackCTor(&(stk), (capacity) \
                                     ON_DBG(, #stk,              \
                                             __FILE__,           \
                                             __func__,           \

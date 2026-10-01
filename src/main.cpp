@@ -5,7 +5,7 @@ int main(void)
     Stack_t stk1 = {};
     size_t capacity = 2;
 
-    StackErr_t err = STACK_INIT(stk1, capacity);
+    StackErr_t err = STACK_CTOR(stk1, capacity);
     ERROR_MSG(&stk1, err);
 
     err = StackPush(&stk1, 30);
@@ -40,7 +40,7 @@ int main(void)
     printf("Pop %lg\n", X);
     ERROR_MSG(&stk1, err);
 
-    err = StackDestroy(&stk1);
+    err = StackDTor(&stk1);
 
     return 0;
 }

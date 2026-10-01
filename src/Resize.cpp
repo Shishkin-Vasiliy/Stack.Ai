@@ -23,7 +23,7 @@ StackErr_t ResizeUp(Stack_t *stk)
     for (size_t i = stk -> size; i < stk -> capacity; i++)
     {
         (stk -> data)[i] = POIZON_DBL;
-    }
+    } 
     *(stk -> data + stk -> capacity) = CHICKEN_UPPER;
 
     err = StackVerify(stk);
