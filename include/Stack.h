@@ -20,12 +20,13 @@ typedef uint64_t Canary_t;
 #define CHICKEN_LOWER 1e13
 #define CHICKEN_UPPER 1e10
 #define CHICKEN_LEFT 0xDEADDEAD
-#define CHICKEN_RIGHT 0xFACEFEED
+#define CHICKEN_RIGHT 0x0D01B0EB
 #define STACK_MIN_CAPACITY 16
 #define STACK_MAX_CAPACITY 1000
 #define QUARTER_CAPACITY(stk) ((stk) -> capacity / 4)
 #define RESIZE_COEFF 2
-#define POIZON_STK_PTR ((StackElem_t *)1638)
+#define POIZON_DATA_PTR ((StackElem_t *)1638)
+#define POIZON_BUF_PTR  ((StackElem_t *)666)
 #define POIZON_DBL NAN 
 
 struct Stack_t

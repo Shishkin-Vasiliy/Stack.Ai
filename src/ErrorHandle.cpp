@@ -80,6 +80,7 @@ void StackDump(Stack_t *stk)
 
     const char *name = stk -> stack_name;
     StackElem_t *buf = stk -> buf;
+    StackElem_t *data = stk -> data;
     const char *func = stk -> func_name;
     const char *file = stk -> file_name;
     int line = stk -> line;
@@ -101,10 +102,10 @@ void StackDump(Stack_t *stk)
     {
         printf("    {\n");
         printf("    [ChickenLower] = %lg\n", buf[0]);
-        for (size_t i = 1; i < size + 1; i++)
-            printf("    *[%lu] = %lg\n", i, buf[i]);
-        for (size_t j = size + 1; j < capacity; j++)
-            printf("     [%lu] = %lg (POIZON)\n", j, buf[j]);
+        for (size_t i = 0; i < size; i++)
+            printf("    *[%lu] = %lg\n", i, data[i]);
+        for (size_t j = size; j < capacity; j++)
+            printf("     [%lu] = %lg (POIZON)\n", j, data[j]);
         printf("    [ChickenUpper] = %lg\n", buf[capacity + 1]);
         printf("    }\n");
     }

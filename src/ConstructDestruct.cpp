@@ -48,8 +48,8 @@ StackErr_t StackDTor(Stack_t *stk)
     }
 
     free(stk -> buf);
-    stk -> buf = POIZON_STK_PTR;
-    stk -> data = POIZON_STK_PTR;
+    stk -> buf = POIZON_BUF_PTR;
+    stk -> data = POIZON_DATA_PTR;
 
     return STACK_OK;
 }
