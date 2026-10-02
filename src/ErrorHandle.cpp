@@ -1,5 +1,31 @@
 #include "Stack.h"
 
+StackErr_t StackVerify(Stack_t *stk)
+{
+    #ifdef STACK_DEBUG
+
+    if ((!stk) || !(stk -> buf))
+        return STACK_BAD_PTR;
+
+    StackErr_t err = StackStructChickenCheck(stk);
+    if (err)
+        return err;
+
+    err = StackDataChickenCheck(stk);
+    if (err)
+        return err;
+
+    size_t size = stk -> size;
+    size_t capacity = stk -> capacity;
+
+    if (size > capacity)
+        return STACK_BAD_SIZE;
+
+    #endif
+
+    return STACK_OK;
+}
+
 int DblCmp(StackElem_t a, StackElem_t b)
 {
     const double EPSILON = 1e-14;
@@ -36,6 +62,8 @@ StackErr_t StackDataChickenCheck(Stack_t *stk)
 
 StackErr_t StackIsEmpty(Stack_t *stk)
 {
+    #ifdef STACK_DEBUG
+
     if (!stk)   
         return STACK_BAD_PTR;
     
@@ -50,33 +78,19 @@ StackErr_t StackIsEmpty(Stack_t *stk)
         return EMPTY_STACK_BAD_SIZE;
     else
         return STACK_OK;
-}
 
-StackErr_t StackVerify(Stack_t *stk)
-{
-    if ((!stk) || !(stk -> buf))
-        return STACK_BAD_PTR;
-
-    StackErr_t err = StackStructChickenCheck(stk);
-    if (err)
-        return err;
-
-    err = StackDataChickenCheck(stk);
-    if (err)
-        return err;
-
-    size_t size = stk -> size;
-    size_t capacity = stk -> capacity;
-
-    if (size > capacity)
-        return STACK_BAD_SIZE;
-
+    #else
     return STACK_OK;
+    #endif
 }
+
 
 void StackDump(Stack_t *stk)
 {
     #ifdef STACK_DEBUG
+
+    const char *dump_file_name = "dump.txt";
+    FILE *dump_file_ptr = fopen(dump_file_name, "w");
 
     const char *name = stk -> stack_name;
     StackElem_t *buf = stk -> buf;
@@ -89,28 +103,30 @@ void StackDump(Stack_t *stk)
     unsigned long long chicken_left = stk -> chicken_left;
     unsigned long long chicken_right = stk -> chicken_right;
 
-    printf("STACK_DUMP\n");
-    printf("****************************************\n");
-    printf("Stack_t <%s> [%p], %s at %s: %d\n", name, stk, func, file, line);
-    printf("{\n");
-    printf("chicken_left = %llu\n", chicken_left);
-    printf("chicken_left = %llu\n", chicken_right);
-    printf("capacity     = %lu\n", capacity);
-    printf("size         = %lu\n", size);
-    printf("buf[%p]\n", buf);
+    fprintf(dump_file_ptr, "STACK_DUMP\n");
+    fprintf(dump_file_ptr, "****************************************\n");
+    fprintf(dump_file_ptr, "Stack_t <%s> [%p], %s at %s: %d\n", name, stk, func, file, line);
+    fprintf(dump_file_ptr, "{\n");
+    fprintf(dump_file_ptr, "chicken_left = %llX\n", chicken_left);
+    fprintf(dump_file_ptr, "chicken_left = %llX\n", chicken_right);
+    fprintf(dump_file_ptr, "capacity     = %lu\n", capacity);
+    fprintf(dump_file_ptr, "size         = %lu\n", size);
+    fprintf(dump_file_ptr, "buf[%p]\n", buf);
     if (buf)
     {
-        printf("    {\n");
-        printf("    [ChickenLower] = %lg\n", buf[0]);
+        fprintf(dump_file_ptr, "    {\n");
+        fprintf(dump_file_ptr, "    [ChickenLower] = %lg\n", buf[0]);
         for (size_t i = 0; i < size; i++)
-            printf("    *[%lu] = %lg\n", i, data[i]);
+            fprintf(dump_file_ptr, "    *[%lu] = %lg\n", i, data[i]);
         for (size_t j = size; j < capacity; j++)
-            printf("     [%lu] = %lg (POIZON)\n", j, data[j]);
-        printf("    [ChickenUpper] = %lg\n", buf[capacity + 1]);
-        printf("    }\n");
+            fprintf(dump_file_ptr, "     [%lu] = %lg (POIZON)\n", j, data[j]);
+        fprintf(dump_file_ptr, "    [ChickenUpper] = %lg\n", buf[capacity + 1]);
+        fprintf(dump_file_ptr, "    }\n");
     }
-    printf("}\n");
-    printf("****************************************\n\n");
+    fprintf(dump_file_ptr, "}\n");
+    fprintf(dump_file_ptr, "****************************************\n\n");
+
+    fclose(dump_file_ptr);
 
     #endif
 }

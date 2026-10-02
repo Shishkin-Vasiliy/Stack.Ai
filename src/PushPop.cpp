@@ -24,7 +24,7 @@ StackErr_t StackPop(Stack_t *stk, StackElem_t *ptr)
     if ((stk -> size) == 0)
         return STACK_UNDERFLOW;
 
-    if ((stk -> size) <= (QUARTER_CAPACITY(stk)) && (stk -> size) > STACK_MIN_CAPACITY)
+    if (((stk -> size) <= (stk -> capacity / 4)) && ((stk -> size) > STACK_MIN_CAPACITY))
         err = ResizeDown(stk);
 
     if (err)

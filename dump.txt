@@ -1,0 +1,33 @@
+STACK_DUMP
+****************************************
+Stack_t <stk1> [0x7be4894000b0], main at src/main.cpp: 8
+{
+chicken_left = DEADDEAD
+chicken_left = D01B0EB
+capacity     = 17
+size         = 0
+buf[0x50e000000040]
+    {
+    [ChickenLower] = 1e+14
+     [0] = nan (POIZON)
+     [1] = nan (POIZON)
+     [2] = nan (POIZON)
+     [3] = nan (POIZON)
+     [4] = nan (POIZON)
+     [5] = nan (POIZON)
+     [6] = nan (POIZON)
+     [7] = nan (POIZON)
+     [8] = nan (POIZON)
+     [9] = nan (POIZON)
+     [10] = nan (POIZON)
+     [11] = nan (POIZON)
+     [12] = nan (POIZON)
+     [13] = nan (POIZON)
+     [14] = nan (POIZON)
+     [15] = nan (POIZON)
+     [16] = nan (POIZON)
+    [ChickenUpper] = 1e+13
+    }
+}
+****************************************
+

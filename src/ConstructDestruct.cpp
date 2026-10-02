@@ -5,6 +5,15 @@ StackErr_t StackCTor(Stack_t *stk, size_t capacity
 {
     printf("Initiating Stack\n");
 
+    if (capacity < STACK_MIN_CAPACITY)
+    {
+        capacity = STACK_MIN_CAPACITY;
+    }
+    else if (capacity > STACK_MAX_CAPACITY)
+    {
+        capacity = STACK_MAX_CAPACITY;
+    }
+
     StackErr_t err = StackIsEmpty(stk);
     stk -> buf = (StackElem_t *) calloc(capacity + 2, sizeof(StackElem_t));
     stk -> data = stk -> buf + 1; 

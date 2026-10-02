@@ -1,0 +1,45 @@
+[2026-01-01 17:37:01] INFO  Created id for stack "stk_1"
+[2026-01-01 17:37:01] INFO  Hash updated
+[2026-01-01 17:37:01] INFO  Stack "stk_1" is created
+[2026-01-01 17:37:01] DEBUG PUSH 0 in "stk_1"
+[2026-01-01 17:37:01] INFO  Hash is updated
+[2026-01-01 17:37:01] DEBUG PUSH 1 in "stk_1"
+[2026-01-01 17:37:01] INFO  Hash is updated
+[2026-01-01 17:37:01] DEBUG PUSH 2 in "stk_1"
+[2026-01-01 17:37:01] INFO  Hash is updated
+[2026-01-01 17:37:01] DEBUG PUSH 3 in "stk_1"
+[2026-01-01 17:37:01] INFO  Hash is updated
+---------------------------------------------------------------------------------------------------------------------------
+DUMP stack "stk_1" [0x608000000120] from main() at main.cpp:17:
+
+STK_POISON = 0
+
+STK_CANARY_1 = 0xBADA55
+STK_CANARY_2 = 0xB16B00B5
+
+stk_1 {
+	canary_1 = 0xBADA55; (OK)
+	data[0x603000001d50] = {
+		[0] = 0; (value)
+		[1] = 1; (value)
+		[2] = 2; (value)
+		[3] = 3; (value)
+		[4] = 0; (POISON)
+		[5] = 0; (POISON)
+		[6] = 0; (POISON)
+		[7] = 0; (POISON)
+	};
+	size = 4; (OK)
+	capacity = 8; (OK)
+	hash = 0xf0c06; (OK)
+	canary_2 = 0xB16B00B5; (OK)
+
+	Created at: main.cpp:9 in main()
+}
+
+Stack statistics:
+- Fill rate: 50.0% (4/8)
+- Element size: 4 bytes
+- Total memory: 120 bytes
+---------------------------------------------------------------------------------------------------------------------------
+[2026-01-01 17:37:01] INFO  Stack "stk_1" is destroyed

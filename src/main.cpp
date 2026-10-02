@@ -3,7 +3,7 @@
 int main(void)
 {
     Stack_t stk1 = {};
-    size_t capacity = 2;
+    size_t capacity = 17;
 
     StackErr_t err = STACK_CTOR(stk1, capacity);
     ERROR_MSG(&stk1, err);
@@ -19,6 +19,7 @@ int main(void)
     err = StackPush(&stk1, 50);
     printf("Push 50\n");
     ERROR_MSG(&stk1, err);
+    StackDump(&stk1);
 
     StackElem_t x = 0;
     err = StackPop(&stk1, &x);

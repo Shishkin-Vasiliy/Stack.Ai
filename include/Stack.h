@@ -17,13 +17,13 @@ typedef uint64_t Canary_t;
 #define ON_DBG(...) 
 #endif
 
-#define CHICKEN_LOWER 1e13
-#define CHICKEN_UPPER 1e10
+#define CHICKEN_LOWER 10e13    
+#define CHICKEN_UPPER 10e12
 #define CHICKEN_LEFT 0xDEADDEAD
 #define CHICKEN_RIGHT 0x0D01B0EB
 #define STACK_MIN_CAPACITY 16
 #define STACK_MAX_CAPACITY 1000
-#define QUARTER_CAPACITY(stk) ((stk) -> capacity / 4)
+
 #define RESIZE_COEFF 2
 #define POIZON_DATA_PTR ((StackElem_t *)1638)
 #define POIZON_BUF_PTR  ((StackElem_t *)666)
@@ -47,7 +47,7 @@ enum StackErr_t {
     STACK_OK,                           // ошибок нет
     STACK_BAD_PTR,                      // стек не создан (calloc вернул NULL)
     EMPTY_STACK_BAD_SIZE,               // размеры size и capacity не 0 у пустого стека
-    STACK_BAD_SIZE,                     // size > capacity
+    STACK_BAD_SIZE,                     // size > capacity 
     STACK_STRUCT_LEFT_CHICKEN_ATTACKED, // атакована курица слева от структуры стека
     STACK_STRUCT_RIGHT_CHICKEN_ATTACKED,// атакована курица справа от структуры стека
     STACK_DATA_LOWER_CHICKEN_ATTACKED,  // атакована курица внизу стека
@@ -75,7 +75,6 @@ StackErr_t ResizeDown(Stack_t *stk);
 StackErr_t StackStructChickenCheck(Stack_t *stk);
 StackErr_t StackDataChickenCheck(Stack_t *stk);
 int DblCmp(StackElem_t a, StackElem_t b);
-
 
 #define STACK_CTOR(stk, capacity) (StackCTor(&(stk), (capacity) \
                                     ON_DBG(, #stk,              \
